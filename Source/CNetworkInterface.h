@@ -33,34 +33,35 @@ typedef struct
 
 class CNetworkInterface
 {
-public:
+protected:
 	// Pointers
-	ARNETWORKAL_Manager_t 		  *	m_pNetworkALManager;
-	ARNETWORK_Manager_t 		  *	m_pNetworkManager;
+	ARNETWORKAL_Manager_t 		     *	m_pNetworkALManager;
+	ARNETWORK_Manager_t 		       *	m_pNetworkManager;
 
-	TCommandCallback				m_pDefaultCommandCallback;
-	TConnectionCallback				m_pConnectionCallback;
-	TDisconnectionCallback			m_pDisconnectionCallback;
+	TCommandCallback				          m_pDefaultCommandCallback;
+	TConnectionCallback			         	m_pConnectionCallback;
+	TDisconnectionCallback		       	m_pDisconnectionCallback;
 
 	// Threads
-	ARSAL_Thread_t 					m_tRxThread;
-	ARSAL_Thread_t 					m_tTxThread;
-	ARSAL_Thread_t					m_tMonitorThread;
+	ARSAL_Thread_t 				          	m_tRxThread;
+	ARSAL_Thread_t 			    	      	m_tTxThread;
+	ARSAL_Thread_t				          	m_tMonitorThread;
 
-	std::array<ARSAL_Thread_t, 2>	m_tRxThreads;	// Threads to read data from buffer
+	std::array<ARSAL_Thread_t, 2>	    m_tRxThreads;	// Threads to read data from buffer
 
 	// Attributes
-	CNetworkSettings 				m_networkSettings;
-	std::array<Rx_Threads_Data_t, 2> m_tRxThreads_data;
+	CNetworkSettings 			          	m_networkSettings;
+	std::array<Rx_Threads_Data_t, 2>  m_tRxThreads_data;
 
-	bool 							m_killMonitor;
+	bool 					 		m_killMonitor;
 	bool 							m_isConnected;
 	bool							m_isRunning;
 
 	// Constants
-	static const uint32_t 			m_kMonitorRetryDelay 	= 5;
-	static const int 				m_kMaxBytesToRead 		= 128 * 1024;		// 128kb - arbitrary
+	static const uint32_t 	          m_kMonitorRetryDelay 	= 5;
+	static const int 				          m_kMaxBytesToRead 		= 128 * 1024;		// 128kb - arbitrary
 
+public:
 	// Methods
 	CNetworkInterface();
 	virtual ~CNetworkInterface();
@@ -70,6 +71,7 @@ public:
 	bool PerformNetworkDiscovery();
 	bool InitializeNetworkManagers();
 	bool StartNetworkThreads();
+	bool isRunning();
 	void StopNetwork();
 	void Cleanup();
 

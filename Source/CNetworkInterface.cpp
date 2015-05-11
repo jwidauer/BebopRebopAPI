@@ -11,15 +11,15 @@ CNetworkInterface::CNetworkInterface()
 {
 	// Initialize pointers
 	m_pNetworkALManager 		= nullptr;
-	m_pNetworkManager			= nullptr;
-	m_tRxThread					= nullptr;
-	m_tTxThread					= nullptr;
-	m_tMonitorThread			= nullptr;
+	m_pNetworkManager			  = nullptr;
+	m_tRxThread					    = nullptr;
+	m_tTxThread					    = nullptr;
+	m_tMonitorThread			  = nullptr;
 
 	// Init attributes
-	m_killMonitor				= false;
-	m_isConnected				= false;
-	m_isRunning					= false;
+	m_killMonitor				    = false;
+	m_isConnected				    = false;
+	m_isRunning					    = false;
 }
 
 CNetworkInterface::~CNetworkInterface()
@@ -269,6 +269,11 @@ bool CNetworkInterface::StartNetworkThreads()
 //	LOG( INFO ) << "Monitor Thread started!";
 
 	return true;
+}
+
+bool CNetworkInterface::isRunning()
+{
+  return m_isRunning;
 }
 
 void CNetworkInterface::StopNetwork()

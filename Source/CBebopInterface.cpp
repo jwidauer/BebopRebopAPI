@@ -46,6 +46,8 @@ bool CBebopInterface::Takeoff()
 		return false;
 	}
 
+	m_isFlying = true;
+
 	return true;
 }
 
@@ -73,6 +75,8 @@ bool CBebopInterface::Land()
 		LOG( ERROR ) << "Failed to generate landing command. Err: " << cmdError;
 		return false;
 	}
+
+	m_isFlying = false;
 
 	return true;
 }
@@ -102,7 +106,22 @@ bool CBebopInterface::Emergency()
 		return false;
 	}
 
+	m_isFlying = false;
+
 	return true;
+}
+
+bool CBebopInterface::setAttitude( TPilotCommand attitudeIn )
+{
+  if( abs(attitudeIn.roll) > 100 || abs(attitudeIn.pitch) > 100 || abs(attitudeIn.yaw) > 100 || abs(attitudeIn.gaz) > 100 )
+  {
+    LOG( ERROR ) << "Attitude commands outside of range [-100,100].";
+    return false;
+  }
+
+  m_attitude = attitudeIn;
+
+  return true;
 }
 
 bool CBebopInterface::NavigateHome( ENavigateHome startOrStopIn )
@@ -128,40 +147,6 @@ bool CBebopInterface::NavigateHome( ENavigateHome startOrStopIn )
 	else
 	{
 		LOG( ERROR ) << "Failed to generate NavigateHome command. Err: " << cmdError;
-		return false;
-	}
-
-	return true;
-}
-
-bool CBebopInterface::SendPilotCommand( const TPilotCommand& commandIn )
-{
-	CCommandPacket packet( 128 );
-
-	// Generate command
-	eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_Generator_GenerateARDrone3PilotingPCMD(
-			packet.m_pData,
-			packet.m_bufferSize,
-			&packet.m_dataSize,
-			commandIn.flag,
-			commandIn.roll,
-			commandIn.pitch,
-			commandIn.yaw,
-			commandIn.gaz,
-			commandIn.psi );
-
-	if( cmdError == ARCOMMANDS_GENERATOR_OK )
-	{
-		// Command should not be acknowledged
-		if( !m_networkInterface.SendData( packet, EOutboundBufferId::OUTBOUND, true ) )
-		{
-			LOG( ERROR ) << "Failed to send Pilot Command.";
-			return false;
-		}
-	}
-	else
-	{
-		LOG( ERROR ) << "Failed to generate Pilot Command. Err: " << cmdError;
 		return false;
 	}
 

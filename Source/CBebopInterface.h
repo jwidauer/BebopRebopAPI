@@ -2,7 +2,6 @@
 
 // Includes
 #include "CVehicleInterface.h"
-#include "BebopCommandsAndData.h"
 
 // Normally, this is forbidden by my style guidelines, but you SHOULD only ever be including one vehicle's namespace
 using namespace rebop::commands::bebop::navigation;
@@ -21,9 +20,9 @@ public:
 	bool Takeoff();
 	bool Land();
 	bool Emergency();
+	bool setAttitude( TPilotCommand attitudeIn );
 	bool FlatTrim();
 	bool NavigateHome( ENavigateHome startOrStopIn );
-	bool SendPilotCommand( const TPilotCommand &poseIn );
 	bool SetAutoTakeoffMode( EAutoTakeoffMode modeIn );
 	bool Flip( EFlipDirection directionIn );
 	bool SetMaxAltitude( float maxAltitudeMetersIn );
