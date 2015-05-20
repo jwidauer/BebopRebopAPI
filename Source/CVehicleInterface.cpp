@@ -127,6 +127,16 @@ bool CVehicleInterface::IsConnected()
 	return m_isConnected;
 }
 
+void CVehicleInterface::setAttitudeChangedCallback( TAttitudeChangedCallback callbackFun, void* ptrIn )
+{
+  m_networkInterface.setAttitudeChangedCallback( callbackFun, ptrIn );
+}
+
+void CVehicleInterface::setSpeedChangedCallback( TSpeedChangedCallback callbackFun, void* ptrIn )
+{
+  m_networkInterface.setSpeedChangedCallback( callbackFun, ptrIn );
+}
+
 void* CVehicleInterface::PilotingThreadFunction( void* dataIn )
 {
   if( dataIn == nullptr)

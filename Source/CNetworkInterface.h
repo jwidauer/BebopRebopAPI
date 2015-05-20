@@ -24,6 +24,8 @@ namespace rebop
 // Typedefs
 typedef std::function<void()> TDisconnectionCallback;
 typedef std::function<void()> TConnectionCallback;
+typedef std::function<void(float, float, float, void*)> TAttitudeChangedCallback;
+typedef std::function<void(float, float, float, void*)> TSpeedChangedCallback;
 typedef std::function<eARNETWORK_MANAGER_CALLBACK_RETURN( int bufferIdIn, uint8_t *dataIn, void *customDataIn, eARNETWORK_MANAGER_CALLBACK_STATUS causeIn )> TCommandCallback;
 typedef struct
 {
@@ -37,10 +39,15 @@ protected:
 	// Pointers
 	ARNETWORKAL_Manager_t 		     *	m_pNetworkALManager;
 	ARNETWORK_Manager_t 		       *	m_pNetworkManager;
+	void                           *  m_pAttitudeChangedCallbackObject;
+	void                           *  m_pSpeedChangedCallbackObject;
 
 	TCommandCallback				          m_pDefaultCommandCallback;
 	TConnectionCallback			         	m_pConnectionCallback;
 	TDisconnectionCallback		       	m_pDisconnectionCallback;
+	TAttitudeChangedCallback          m_pAttitudeChangedCallback;
+	TSpeedChangedCallback             m_pSpeedChangedCallback;
+
 
 	// Threads
 	ARSAL_Thread_t 				          	m_tRxThread;
@@ -88,7 +95,12 @@ public:
 	int GetEstimatedMissPercentage( EOutboundBufferId outboundBufferIdIn );
 	void DecodeData( CCommandPacket& dataOut);
 
+	// Callback setting functions
+	void setAttitudeChangedCallback( TAttitudeChangedCallback callbackFun, void* ptrIn );
+	void setSpeedChangedCallback( TSpeedChangedCallback callbackFun, void* ptrIn);
+
 	// Callback registration functions
+	void RegisterFlightCommandCallbacks();   // register callbacks for flight commands
 	void RegisterConnectionCallback( TConnectionCallback callbackIn );
 	void UnregisterConnectionCallback();
 	void RegisterDisconnectionCallback( TDisconnectionCallback callbackIn );

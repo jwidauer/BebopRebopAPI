@@ -37,6 +37,8 @@ public:
 	virtual void Update();
 	virtual void Cleanup();
 	virtual bool IsConnected();
+	virtual void setAttitudeChangedCallback( TAttitudeChangedCallback callbackFun, void* ptrIn );
+	virtual void setSpeedChangedCallback( TSpeedChangedCallback callbackFun, void* ptrIn );
 };
 
 }

@@ -16,6 +16,9 @@ CNetworkInterface::CNetworkInterface()
 	m_tTxThread					    = nullptr;
 	m_tMonitorThread			  = nullptr;
 
+  m_pAttitudeChangedCallbackObject       = nullptr;
+  m_pSpeedChangedCallbackObject          = nullptr;
+
 	// Init attributes
 	m_killMonitor				    = false;
 	m_isConnected				    = false;
@@ -44,7 +47,10 @@ bool CNetworkInterface::Initialize()
 		return false;
 	}
 
-	// Start network connection with drone
+	// Register callbacks
+	RegisterFlightCommandCallbacks();
+
+	// Start networking threads
 	m_isRunning = true;
 	if( !StartNetworkThreads() )
 	{
@@ -546,12 +552,25 @@ void CNetworkInterface::DecodeData(CCommandPacket& dataOut)
 {
 	eARCOMMANDS_DECODER_ERROR cmdError = ARCOMMANDS_DECODER_OK;
 	cmdError = ARCOMMANDS_Decoder_DecodeBuffer (dataOut.m_pData, dataOut.m_dataSize);
+
 	if ((cmdError != ARCOMMANDS_DECODER_OK) && (cmdError != ARCOMMANDS_DECODER_ERROR_NO_CALLBACK))
 	{
 		char msg[128];
 		ARCOMMANDS_Decoder_DescribeBuffer (dataOut.m_pData, dataOut.m_dataSize, msg, sizeof(msg));
 		LOG( ERROR ) << "ARCOMMANDS_Decoder_DecodeBuffer () failed : " << cmdError << msg;
 	}
+}
+
+void CNetworkInterface::setAttitudeChangedCallback( TAttitudeChangedCallback callbackFun, void* ptrIn )
+{
+  m_pAttitudeChangedCallback = callbackFun;
+  m_pAttitudeChangedCallbackObject = ptrIn;
+}
+
+void CNetworkInterface::setSpeedChangedCallback( TSpeedChangedCallback callbackFun, void* ptrIn )
+{
+  m_pSpeedChangedCallback = callbackFun;
+  m_pSpeedChangedCallbackObject = ptrIn;
 }
 
 void CNetworkInterface::RegisterDisconnectionCallback( TDisconnectionCallback callbackIn )
@@ -628,6 +647,27 @@ eARNETWORK_MANAGER_CALLBACK_RETURN CNetworkInterface::DefaultCommandCallback( in
     }
 
     return retval;
+}
+
+void CNetworkInterface::RegisterFlightCommandCallbacks()
+{
+  if( m_pAttitudeChangedCallback.target<void(*)(float, float, float, void*)>() != nullptr )
+  {
+    ARCOMMANDS_Decoder_SetARDrone3PilotingStateAttitudeChangedCallback( *m_pAttitudeChangedCallback.target<void(*)(float, float, float, void*)>(), m_pAttitudeChangedCallbackObject);
+  }
+  else
+  {
+    LOG( WARNING ) << "No or wrong callback function for attitude change set. Did not register!";
+  }
+
+  if( m_pSpeedChangedCallback.target<void(*)(float, float, float, void*)>() != nullptr )
+  {
+    ARCOMMANDS_Decoder_SetARDrone3PilotingStateSpeedChangedCallback( *m_pSpeedChangedCallback.target<void(*)(float, float, float, void*)>(), m_pSpeedChangedCallbackObject);
+  }
+  else
+  {
+    LOG( WARNING ) << "No or wrong callback function for speed change set. Did not register!";
+  }
 }
 
 void* CNetworkInterface::MonitorThreadFunction( void* dataIn )
