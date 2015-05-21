@@ -99,7 +99,7 @@ bool CNetworkInterface::PerformNetworkDiscovery()
 	// If successful, perform network discovery with the target
 	if( !failed )
 	{
-		eARDISCOVERY_ERROR err = ARDISCOVERY_Connection_ControllerConnection( discoveryData, m_networkSettings.DISCOVERY_PORT, m_networkSettings.TARGET_WIFI_IP_ADDRESS );
+		eARDISCOVERY_ERROR err = ARDISCOVERY_Connection_ControllerConnection( discoveryData, m_networkSettings.DISCOVERY_PORT, m_networkSettings.TARGET_USB_IP_ADDRESS );
 
 		if( err != ARDISCOVERY_OK )
 		{
@@ -144,7 +144,7 @@ bool CNetworkInterface::InitializeNetworkManagers()
 	}
 
 	// Initialize the ARNetworkALManager
-	netAlError = ARNETWORKAL_Manager_InitWifiNetwork( m_pNetworkALManager, m_networkSettings.TARGET_WIFI_IP_ADDRESS, m_networkSettings.m_outboundPort, m_networkSettings.m_inboundPort, timeoutSecs );
+	netAlError = ARNETWORKAL_Manager_InitWifiNetwork( m_pNetworkALManager, m_networkSettings.TARGET_USB_IP_ADDRESS, m_networkSettings.m_outboundPort, m_networkSettings.m_inboundPort, timeoutSecs );
 
 	if( netAlError != ARNETWORKAL_OK )
 	{
