@@ -1,0 +1,16 @@
+create libarsdk3.a
+addlib libarcommands.a
+addlib libardatatransfer.a
+addlib libardiscovery.a
+addlib libarmavlink.a
+addlib libarmedia.a
+addlib libarnetwork.a
+addlib libarnetworkal.a
+addlib libarsal.a
+addlib libarstream.a
+addlib libarupdater.a
+addlib libarutils.a
+addlib libcurl.a
+addlib libjson.a
+save
+end

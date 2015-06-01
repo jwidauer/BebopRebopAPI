@@ -25,3 +25,14 @@ Some notes:
 
 I PROVIDE NO GUARANTEES OF THE FUNCTIONALITY OF THIS CODE, YOUR SAFETY, OTHERS' SAFETY, OR YOUR PROPERTY'S SAFETY!
 USE AT YOUR OWN RISK!
+
+Installation guide:
+
+Depending on your platform you might have to recompile the ARDrone SDK to work on your architecture.
+To do this install and compile the SDK as instructed on their repo and then move the .mri file in the Install folder to the <ArdroneSDKinstallfolder>/ARSDKBuildUtils/Targets/Unix/Install/lib folder. Then use the command:
+
+ar -M <arsdk3.mri
+
+you will get a file called "libarsdk3.a".
+Move this file to the ThirdPartyLibs/ArDroneSDK3/lib/ folder and overwrite the old one.
+Now it should compile without problems!
