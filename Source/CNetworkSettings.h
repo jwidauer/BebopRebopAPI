@@ -40,6 +40,8 @@ public:
 	const int OUTBOUND_PORT 				= 54321;				// The port on the vehicle that you are sending commands to
 	const int INBOUND_PORT 					= 43210;				// The port on your machine that you are listening for commands on
 
+	const char* TARGET_IP_ADDRESS = TARGET_WIFI_IP_ADDRESS;
+
 	// Attributes
 	int m_outboundPort;		// This is the port we write to. We'll ask the target for the port they are using during discovery. By default, this is 54321.
 	int m_inboundPort;		// This is the port we listen on. We'll tell the target what this is during discovery. By default this is 43210.
