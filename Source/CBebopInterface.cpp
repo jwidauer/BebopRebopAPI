@@ -113,11 +113,6 @@ bool CBebopInterface::Emergency()
 
 bool CBebopInterface::setAttitude( TPilotCommand attitudeIn )
 {
-  if( abs(attitudeIn.roll) > 100 || abs(attitudeIn.pitch) > 100 || abs(attitudeIn.yaw) > 100 || abs(attitudeIn.gaz) > 100 )
-  {
-    LOG( ERROR ) << "Attitude commands outside of range [-100,100].";
-    return false;
-  }
 
   m_attitude = attitudeIn;
 
